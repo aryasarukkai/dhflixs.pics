@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useState } from 'react'
+import { Menu, X } from 'lucide-react'
 
 const LazyImage = lazy(() => import('./LazyImage'))
 
@@ -17,18 +18,19 @@ const Portfolio = () => {
       <header className="fixed top-0 left-0 right-0 bg-black text-white p-4 flex justify-between items-center z-50">
         <div className="text-lg ml-4 md:ml-16">dh.flixs</div>
         <div className="md:hidden">
-          <button onClick={toggleMenu} className="text-white">
-            {isMenuOpen ? 'Close' : 'Menu'}
+          <button onClick={toggleMenu} className="text-white p-2">
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        <div className={`md:flex items-center space-x-4 mr-4 md:mr-16 ${isMenuOpen ? 'flex flex-col absolute top-full right-0 bg-black p-4' : 'hidden md:flex'}`}>
-          <a href="https://instagram.com/dh.flixs/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">
+        <nav className={`md:flex items-center space-x-4 mr-4 md:mr-16 ${isMenuOpen ? 'flex flex-col absolute top-full left-0 right-0 bg-black p-4' : 'hidden md:flex'}`}>
+          <a href="https://instagram.com/dh.flixs/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors py-2 md:py-0">
             Instagram
           </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">Photo Library</a>
-          <a href="#about" className="hover:text-gray-300 transition-colors">About Me</a>
-          <button onClick={openScheduling} className="bg-white text-black px-4 py-2 rounded-full hover:bg-gray-200 transition-colors">Schedule Now</button>
-        </div>
+          <a href="#" className="hover:text-gray-300 transition-colors py-2 md:py-0">Photo Library</a>
+          <a href="#about" className="hover:text-gray-300 transition-colors py-2 md:py-0">About Me</a>
+          <a href="#pricing" className="hover:text-gray-300 transition-colors py-2 md:py-0">Pricing</a>
+          <button onClick={openScheduling} className="bg-white text-black px-4 py-2 rounded-full hover:bg-gray-200 transition-colors mt-2 md:mt-0">Schedule Now</button>
+        </nav>
       </header>
 
       <main className="pt-16">
@@ -98,6 +100,17 @@ const Portfolio = () => {
               With a keen eye for detail and a love for storytelling through visuals, 
               I strive to create memories that will last a lifetime. Let's work together to capture your story!
             </p>
+          </div>
+        </section>
+
+        <section id="pricing" className="py-16 px-4">
+          <h2 className="text-4xl text-center mb-8 animate-fade-in">Pricing</h2>
+          <div className="max-w-4xl mx-auto">
+            <iframe 
+              src="https://dhflixs.setmore.com" 
+              title="Pricing and Scheduling"
+              className="w-full h-[1200px] border-none"
+            />
           </div>
         </section>
 
