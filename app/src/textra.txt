@@ -1,11 +1,11 @@
 import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const LazyImage = lazy(() => import('./LazyImage'));
 
 // Photo data array
 const photoData = [
-  { src: '/main(1).jpg', caption: 'High School Football' },
+  { src: '/main(1).jpg', caption: 'Special Event Photography' },
   { src: '/sjevrsl(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
   { src: '/sjevrsl2(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
   { src: '/sjevrsl3(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
@@ -71,7 +71,7 @@ const reviewsData = [
   },
   { 
     stars: 5, 
-    text: "David took incredible photos of our charity show and captured every single moment beautifully! He's very accommodating and easy to work with!", 
+    text: "David took incredible photos of our charity show and captured every single moment beautifully! He’s very accommodating and easy to work with!", 
     name: "Shaan J." 
   },
   { 
@@ -88,8 +88,6 @@ const Portfolio = () => {
   const [shuffledPhotos, setShuffledPhotos] = useState([]);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [slideshowPaused, setSlideshowPaused] = useState(false);
   
   // Refs for sections to track visibility
   const sectionRefs = useRef([]);
@@ -102,9 +100,9 @@ const Portfolio = () => {
   
   // Slideshow interval
   useEffect(() => {
-    if (shuffledPhotos.length > 0 && !slideshowPaused) {
+    if (shuffledPhotos.length > 0) {
       slideInterval.current = setInterval(() => {
-        goToNextSlide();
+        setCurrentSlide(prev => (prev + 1) % shuffledPhotos.length);
       }, 5000);
     }
     
@@ -113,18 +111,7 @@ const Portfolio = () => {
         clearInterval(slideInterval.current);
       }
     };
-  }, [shuffledPhotos, slideshowPaused, currentSlide]);
-  
-  // Initialize animations after component mounts
-  useEffect(() => {
-    // Force any animations to trigger properly
-    setTimeout(() => {
-      const sections = document.querySelectorAll('.opacity-0');
-      sections.forEach(section => {
-        section.classList.add('animate-fade-in');
-      });
-    }, 100);
-  }, []);
+  }, [shuffledPhotos]);
   
   // Scroll behavior for header and animations
   useEffect(() => {
@@ -159,43 +146,6 @@ const Portfolio = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [lastScrollY]);
-  
-  // Slideshow navigation functions
-  const goToNextSlide = () => {
-    if (isTransitioning || !shuffledPhotos.length) return;
-    
-    setIsTransitioning(true);
-    setCurrentSlide(prev => (prev + 1) % shuffledPhotos.length);
-    
-    // Reset transition state after animation completes
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 600);
-  };
-  
-  const goToPrevSlide = () => {
-    if (isTransitioning || !shuffledPhotos.length) return;
-    
-    setIsTransitioning(true);
-    setCurrentSlide(prev => (prev - 1 + shuffledPhotos.length) % shuffledPhotos.length);
-    
-    // Reset transition state after animation completes
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 600);
-  };
-  
-  // Pause slideshow on hover/interaction
-  const pauseSlideshow = () => {
-    setSlideshowPaused(true);
-    if (slideInterval.current) {
-      clearInterval(slideInterval.current);
-    }
-  };
-  
-  const resumeSlideshow = () => {
-    setSlideshowPaused(false);
-  };
   
   // Smooth scroll function
   const scrollToSection = (id) => {
@@ -301,31 +251,21 @@ const Portfolio = () => {
             </div>
           </div>
           
-          {/* Enhanced Slideshow */}
-          <div 
-            className="w-full h-[50vh] md:h-[70vh] relative overflow-hidden rounded-lg mx-auto max-w-6xl px-4 mb-8 md:mb-0 opacity-0 animate-fade-in animation-delay-500"
-            onMouseEnter={pauseSlideshow}
-            onMouseLeave={resumeSlideshow}
-          >
+          {/* Slideshow */}
+          <div className="w-full h-[50vh] md:h-[60vh] relative overflow-hidden rounded-lg mx-auto max-w-6xl px-4 opacity-0 animate-fade-in animation-delay-500">
             {shuffledPhotos.map((photo, index) => (
               <div 
                 key={index} 
-                className={`absolute inset-0 transition-all duration-600 ease-in-out ${
-                  index === currentSlide 
-                    ? 'opacity-100 z-10 scale-100' 
-                    : 'opacity-0 z-0 scale-105'
-                }`}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
               >
                 <Suspense fallback={<div className="w-full h-full bg-gray-900 flex items-center justify-center">Loading...</div>}>
-                  <div className="w-full h-full flex items-center justify-center bg-black">
-                    <LazyImage 
-                      src={photo.src} 
-                      alt={photo.caption} 
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
+                  <LazyImage 
+                    src={photo.src} 
+                    alt={photo.caption} 
+                    className="w-full h-full object-cover"
+                  />
                 </Suspense>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-100 flex items-end p-6">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                   <div className="w-full flex justify-between items-end">
                     <h3 className="text-xl md:text-2xl font-medium">{photo.caption}</h3>
                     <button 
@@ -338,51 +278,6 @@ const Portfolio = () => {
                 </div>
               </div>
             ))}
-            
-            {/* Navigation Buttons */}
-            <button 
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 z-20 transition-all duration-300 hover:scale-110"
-              onClick={(e) => {
-                e.preventDefault();
-                goToPrevSlide();
-              }}
-              aria-label="Previous slide"
-            >
-              <ChevronLeft size={28} />
-            </button>
-            
-            <button 
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 z-20 transition-all duration-300 hover:scale-110"
-              onClick={(e) => {
-                e.preventDefault();
-                goToNextSlide();
-              }}
-              aria-label="Next slide"
-            >
-              <ChevronRight size={28} />
-            </button>
-            
-            {/* Slide Indicators */}
-            <div className="absolute bottom-20 left-0 right-0 flex justify-center gap-2 z-20">
-              {shuffledPhotos.length > 0 && shuffledPhotos.slice(0, Math.min(7, shuffledPhotos.length)).map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (!isTransitioning) {
-                      setIsTransitioning(true);
-                      setCurrentSlide(index);
-                      setTimeout(() => {
-                        setIsTransitioning(false);
-                      }, 600);
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === currentSlide ? 'bg-white w-4' : 'bg-white/50'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
           </div>
           
           <div className="max-w-4xl w-full text-center mt-12 mb-20 px-4 opacity-0 animate-fade-in animation-delay-700">
@@ -415,7 +310,7 @@ const Portfolio = () => {
               </div>
               <div className="flex flex-col justify-center space-y-6">
                 <p>
-                I'm David Huan, a sports photographer and videographer with a passion for capturing the game's most unforgettable moments. Whether it's a fast-paced highlight reel or a perfectly timed action shot, my goal is to showcase the skill, emotion, and dedication of every athlete. Based in the Bay Area, I've worked with teams and programs to create professional, high-impact visuals that leave a lasting impression.
+                I’m David Huan, a sports photographer and videographer with a passion for capturing the game’s most unforgettable moments. Whether it’s a fast-paced highlight reel or a perfectly timed action shot, my goal is to showcase the skill, emotion, and dedication of every athlete. Based in the Bay Area, I’ve worked with teams and programs to create professional, high-impact visuals that leave a lasting impression.
                 </p>
                 <p>
                 David Huan Media delivers high-quality sports photography and videography, capturing the intensity, passion, and raw energy of every game. Specializing in cinematic hype videos and action-packed photography, we create professional content that brings athletes' moments to life. From school teams to elite club programs, our visuals are crafted to stand out.
@@ -550,7 +445,7 @@ const Portfolio = () => {
       )}
       
       {/* Add CSS animations */}
-      <style jsx global>{`
+      <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
@@ -562,7 +457,6 @@ const Portfolio = () => {
         }
         
         .animate-fade-in {
-          opacity: 1 !important;
           animation: fadeIn 1s forwards;
         }
         
@@ -576,26 +470,6 @@ const Portfolio = () => {
         
         .animation-delay-700 {
           animation-delay: 0.7s;
-        }
-        
-        /* Fix hover effects for mobile */
-        @media (hover: hover) {
-          .hover-overlay {
-            opacity: 0;
-          }
-          
-          .hover-overlay:hover {
-            opacity: 1;
-          }
-        }
-        
-        /* Make sure slideshow is fully visible */
-        .slideshow-container {
-          height: 70vh;
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          position: relative;
         }
       `}</style>
     </div>
