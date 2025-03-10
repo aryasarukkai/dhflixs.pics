@@ -1,66 +1,105 @@
 import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
 
 const LazyImage = lazy(() => import('./LazyImage'));
 
-// Photo data array
-const photoData = [
-  { src: '/main(1).jpg', caption: 'High School Football' },
-  { src: '/sjevrsl(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/sjevrsl2(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/sjevrsl3(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/sjevrsl4(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/sjevrsl5(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/sjevrsl6(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/sjevrsl7(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake' },
-  { src: '/hsjbb1(1).jpg', caption: 'High School Basketball' },
-  { src: '/hsjbb2(1).jpg', caption: 'High School Basketball' },
-  { src: '/hsjbb3(1).jpg', caption: 'High School Basketball' },
-  { src: '/hsjbb4(1).jpg', caption: 'High School Basketball' },
-  { src: '/hsvfb1(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb2(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb3(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb4(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb5(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb6(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb7(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb8(1).jpg', caption: 'High School Football' },
-  { src: '/hsvfb9(1).jpg', caption: 'High School Football' },
-  { src: '/vbs1(1).jpg', caption: 'High School Boys Soccer' },
-  { src: '/vbs2(1).jpg', caption: 'High School Boys Soccer' },
-  { src: '/vbs3(1).jpg', caption: 'High School Boys Soccer' },
-  { src: '/vbs4(1).jpg', caption: 'High School Boys Soccer' },
-  { src: '/vbs5(1).jpg', caption: 'High School Boys Soccer' },
-  { src: '/vbs6(1).jpg', caption: 'High School Boys Soccer' },
-  { src: '/gfhsn1(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gfhsn2(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gfhsn3(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gfhsn4(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gfhsn5(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gfhsn6(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gfhsn7(1).jpg', caption: 'High School Girls Field Hockey Senior Night' },
-  { src: '/gvb1(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb2(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb3(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb4(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb5(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb6(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb7(1).jpg', caption: 'High School Girls Volleyball' },
-  { src: '/gvb8(1).jpg', caption: 'High School Girls Volleyball' }
+// Simplified photo data - one photo per event category
+const heroSlideshow = [
+  {src: '/sjevrsl3(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+  {src: '/hsvfb9(1).jpg', caption: 'High School Football'},
+  {src: '/vbs6(1).jpg', caption: 'High School Boys Soccer'},
+  {src: '/hsjbb3(1).jpg', caption: 'High School Basketball'},
+  {src: '/gvb8(1).jpg', caption: 'High School Girls Volleyball'},
+  {src: '/gfhsn2(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
 ];
 
-// Shuffle array but keep first element fixed
-const shuffleArray = (array) => {
-  const first = array[0];
-  const restOfArray = array.slice(1);
-  
-  for (let i = restOfArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [restOfArray[i], restOfArray[j]] = [restOfArray[j], restOfArray[i]];
+// Full photo collections for each category
+const portfolioCategories = [
+  {
+    id: 'mls',
+    title: 'MLS Soccer',
+    coverImage: '/sjevrsl5(1).jpg',
+    photos: [
+      {src: '/sjevrsl(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+      {src: '/sjevrsl2(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+      {src: '/sjevrsl3(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+      {src: '/sjevrsl4(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+      {src: '/sjevrsl5(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+      {src: '/sjevrsl6(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+      {src: '/sjevrsl7(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
+    ]
+  },
+  {
+    id: 'football',
+    title: 'High School Football',
+    coverImage: '/hsvfb6(1).jpg',
+    photos: [
+      {src: '/main(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb1(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb2(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb3(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb4(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb5(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb6(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb7(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb8(1).jpg', caption: 'High School Football'},
+      {src: '/hsvfb9(1).jpg', caption: 'High School Football'},
+    ]
+  },
+  {
+    id: 'soccer',
+    title: 'High School Soccer',
+    coverImage: '/vbs1(1).jpg',
+    photos: [
+      {src: '/vbs1(1).jpg', caption: 'High School Boys Soccer'},
+      {src: '/vbs2(1).jpg', caption: 'High School Boys Soccer'},
+      {src: '/vbs3(1).jpg', caption: 'High School Boys Soccer'},
+      {src: '/vbs4(1).jpg', caption: 'High School Boys Soccer'},
+      {src: '/vbs5(1).jpg', caption: 'High School Boys Soccer'},
+      {src: '/vbs6(1).jpg', caption: 'High School Boys Soccer'},
+    ]
+  },
+  {
+    id: 'basketball',
+    title: 'High School Basketball',
+    coverImage: '/hsjbb2(1).jpg',
+    photos: [
+      {src: '/hsjbb1(1).jpg', caption: 'High School Basketball'},
+      {src: '/hsjbb2(1).jpg', caption: 'High School Basketball'},
+      {src: '/hsjbb3(1).jpg', caption: 'High School Basketball'},
+      {src: '/hsjbb4(1).jpg', caption: 'High School Basketball'},
+    ]
+  },
+  {
+    id: 'volleyball',
+    title: 'High School Volleyball',
+    coverImage: '/gvb1(1).jpg',
+    photos: [
+      {src: '/gvb1(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb2(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb3(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb4(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb5(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb6(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb7(1).jpg', caption: 'High School Girls Volleyball'},
+      {src: '/gvb8(1).jpg', caption: 'High School Girls Volleyball'},
+    ]
+  },
+  {
+    id: 'fieldhockey',
+    title: 'High School Field Hockey',
+    coverImage: '/gfhsn3(1).jpg',
+    photos: [
+      {src: '/gfhsn1(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+      {src: '/gfhsn2(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+      {src: '/gfhsn3(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+      {src: '/gfhsn4(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+      {src: '/gfhsn5(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+      {src: '/gfhsn6(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+      {src: '/gfhsn7(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
+    ]
   }
-  
-  return [first, ...restOfArray];
-};
+];
 
 // Reviews data
 const reviewsData = [
@@ -85,24 +124,41 @@ const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [shuffledPhotos, setShuffledPhotos] = useState([]);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [slideshowPaused, setSlideshowPaused] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  
+  // Gallery viewer state
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [galleryCurrentSlide, setGalleryCurrentSlide] = useState(0);
+  
+  // Image loading optimization
+  const [loadedImages, setLoadedImages] = useState({});
   
   // Refs for sections to track visibility
   const sectionRefs = useRef([]);
   const slideInterval = useRef(null);
   
-  // Initialize shuffle photos
+  // Preload images for main slideshow only
   useEffect(() => {
-    setShuffledPhotos(shuffleArray([...photoData]));
+    heroSlideshow.forEach(photo => {
+      const img = new Image();
+      img.src = photo.src;
+      img.onload = () => {
+        setLoadedImages(prev => ({
+          ...prev,
+          [photo.src]: true
+        }));
+      };
+    });
   }, []);
   
-  // Slideshow interval
+  // Slideshow interval - only for hero slideshow (simplified)
   useEffect(() => {
-    if (shuffledPhotos.length > 0 && !slideshowPaused) {
+    if (!slideshowPaused) {
       slideInterval.current = setInterval(() => {
         goToNextSlide();
       }, 5000);
@@ -113,7 +169,7 @@ const Portfolio = () => {
         clearInterval(slideInterval.current);
       }
     };
-  }, [shuffledPhotos, slideshowPaused, currentSlide]);
+  }, [slideshowPaused, currentSlide]);
   
   // Initialize animations after component mounts
   useEffect(() => {
@@ -151,6 +207,19 @@ const Portfolio = () => {
           }
         }
       });
+
+      // Update active section based on scroll position
+      const sections = ['home', 'about', 'portfolio', 'reviews', 'pricing', 'contact'];
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i]);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 100) {
+            setActiveSection(sections[i]);
+            break;
+          }
+        }
+      }
     };
     
     window.addEventListener('scroll', handleScroll);
@@ -162,10 +231,10 @@ const Portfolio = () => {
   
   // Slideshow navigation functions
   const goToNextSlide = () => {
-    if (isTransitioning || !shuffledPhotos.length) return;
+    if (isTransitioning) return;
     
     setIsTransitioning(true);
-    setCurrentSlide(prev => (prev + 1) % shuffledPhotos.length);
+    setCurrentSlide((prev) => (prev + 1) % heroSlideshow.length);
     
     // Reset transition state after animation completes
     setTimeout(() => {
@@ -174,15 +243,31 @@ const Portfolio = () => {
   };
   
   const goToPrevSlide = () => {
-    if (isTransitioning || !shuffledPhotos.length) return;
+    if (isTransitioning) return;
     
     setIsTransitioning(true);
-    setCurrentSlide(prev => (prev - 1 + shuffledPhotos.length) % shuffledPhotos.length);
+    setCurrentSlide((prev) => (prev - 1 + heroSlideshow.length) % heroSlideshow.length);
     
     // Reset transition state after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
     }, 600);
+  };
+  
+  // Gallery navigation functions
+  const goToNextGallerySlide = () => {
+    if (!selectedCategory) return;
+    setGalleryCurrentSlide((prev) => 
+      (prev + 1) % portfolioCategories.find(c => c.id === selectedCategory).photos.length
+    );
+  };
+  
+  const goToPrevGallerySlide = () => {
+    if (!selectedCategory) return;
+    const category = portfolioCategories.find(c => c.id === selectedCategory);
+    setGalleryCurrentSlide((prev) => 
+      (prev - 1 + category.photos.length) % category.photos.length
+    );
   };
   
   // Pause slideshow on hover/interaction
@@ -201,7 +286,7 @@ const Portfolio = () => {
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 70;
+      const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       
@@ -210,104 +295,304 @@ const Portfolio = () => {
         behavior: 'smooth'
       });
       
+      setActiveSection(id);
       setIsMenuOpen(false);
     }
   };
   
+  // Open/close modal functions
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openScheduling = () => setIsSchedulingOpen(true);
   const closeScheduling = () => setIsSchedulingOpen(false);
+  
+  // Gallery functions
+  const openGallery = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setGalleryCurrentSlide(0);
+    setGalleryOpen(true);
+    // Preload the images of this category
+    const category = portfolioCategories.find(c => c.id === categoryId);
+    if (category) {
+      category.photos.forEach(photo => {
+        const img = new Image();
+        img.src = photo.src;
+      });
+    }
+  };
+  
+  const closeGallery = () => {
+    setGalleryOpen(false);
+    setSelectedCategory(null);
+    setGalleryCurrentSlide(0);
+  };
+
+  // Render the Portfolio view - with improved hover effects and buttons
+  const renderPortfolio = () => {
+    return (
+      <section 
+        id="portfolio" 
+        className="py-20 px-4 opacity-0 transition-opacity duration-1000"
+        ref={el => sectionRefs.current[1] = el}
+      >
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl text-center mb-12 relative">
+            Portfolio
+            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Portfolio categories with improved hover interaction */}
+            {portfolioCategories.map((category) => (
+              <div 
+                key={category.id}
+                className="overflow-hidden rounded-lg group relative cursor-pointer"
+              >
+                <div className="aspect-w-4 aspect-h-3">
+                  <Suspense fallback={<div className="w-full h-full bg-gray-900 flex items-center justify-center">Loading...</div>}>
+                    <LazyImage 
+                      src={category.coverImage}
+                      alt={category.title} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </Suspense>
+                </div>
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="flex flex-col items-center gap-4">
+                    <h3 className="text-xl font-medium">{category.title}</h3>
+                    <div className="flex gap-4">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openGallery(category.id);
+                        }}
+                        className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1"
+                      >
+                        View Slideshow
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openScheduling();
+                        }}
+                        className="bg-transparent border border-white text-white px-4 py-2 rounded-full font-medium hover:bg-white hover:text-black transition-all duration-300 hover:-translate-y-1"
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-12">
+            <button 
+              onClick={openScheduling}
+              className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              Book a Shoot
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Render the Contact section
+  const renderContact = () => {
+    return (
+      <section 
+        id="contact" 
+        className="py-20 px-4 opacity-0 transition-opacity duration-1000"
+        ref={el => sectionRefs.current[3] = el}
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl text-center mb-12 relative">
+            Contact
+            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
+          </h2>
+          
+          <div className="bg-gray-900 bg-opacity-40 p-8 rounded-lg">
+            <div className="text-center mb-8">
+              <p className="text-xl mb-6">Please contact me before booking to discuss your project requirements and details.</p>
+              
+              <div className="flex flex-col md:flex-row justify-center items-center gap-8 mb-8">
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <a href="mailto:davidhuanmedia@gmail.com" className="hover:text-gray-300 transition-colors">davidhuanmedia@gmail.com</a>
+                </div>
+                
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  <a href="tel:+14085551234" className="hover:text-gray-300 transition-colors">(669) 639-0896</a>
+                </div>
+              </div>
+              
+              <div className="flex justify-center space-x-6">
+                <a 
+                  href="https://instagram.com/dh.flixs/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-gray-300 transition-colors"
+                >
+                  <Instagram size={28} />
+                </a>
+                <a
+                  href="https://linktr.ee/dh.flixs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-gray-300 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7.5 21H5.25C4.0075 21 3 19.9925 3 18.75V5.25C3 4.0075 4.0075 3 5.25 3H7.5V21Z" />
+                    <path d="M16.5 21H18.75C19.9925 21 21 19.9925 21 18.75V5.25C21 4.0075 19.9925 3 18.75 3H16.5V21Z" />
+                    <path d="M16.5 12H7.5V16.5H16.5V12Z" />
+                    <path d="M16.5 3H7.5V7.5H16.5V3Z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <button 
+                onClick={openScheduling}
+                className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                Schedule Consultation
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  };
 
   return (
     <div className="font-['Libre_Baskerville'] text-white bg-black min-h-screen overflow-x-hidden">
       {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 bg-black bg-opacity-90 backdrop-blur-md text-white p-4 flex justify-between items-center z-50 transition-transform duration-300 ${!isHeaderVisible ? '-translate-y-full' : 'translate-y-0'}`}>
-        <div className="flex items-center ml-4 md:ml-16">
-          <img src="/davidhuanmedia.jpg" alt="David Huan Media Logo" className="h-8 w-8 rounded-full mr-3" />
-          <div className="text-lg">dh.flixs</div>
+      <header className={`fixed top-0 left-0 right-0 bg-black bg-opacity-90 backdrop-blur-md text-white py-5 flex justify-between items-center z-50 transition-transform duration-300 ${!isHeaderVisible ? '-translate-y-full' : 'translate-y-0'}`}>
+        <div className="flex items-center ml-6 md:ml-16">
+          <img src="/davidhuanmedia.jpg" alt="David Huan Media Logo" className="h-12 w-12 rounded-full mr-4" />
+          <div className="flex flex-col">
+            <div className="text-xl font-medium">David Huan Media | dh.flixs</div>
+            <div className="text-sm text-gray-300">Sports Media Agency</div>
+          </div>
         </div>
         
-        <div className="md:hidden">
+        <div className="md:hidden mr-6">
           <button onClick={toggleMenu} className="text-white p-2">
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
         
-        <nav className={`md:flex items-center space-x-8 mr-4 md:mr-16 ${isMenuOpen ? 'flex flex-col absolute top-full left-0 right-0 bg-black bg-opacity-95 p-6' : 'hidden md:flex'}`}>
+        <nav className={`md:flex items-center space-x-8 mr-6 md:mr-16 ${isMenuOpen ? 'flex flex-col absolute top-full left-0 right-0 bg-black bg-opacity-95 p-6' : 'hidden md:flex'}`}>
           <a 
-            href="https://instagram.com/dh.flixs/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-gray-300 transition-colors py-3 md:py-0 relative group"
+            href="#home" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'home' ? 'text-white' : 'text-gray-400'}`}
           >
-            Instagram
-            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+            Home
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'home' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
           <a 
             href="#about" 
             onClick={(e) => { e.preventDefault(); scrollToSection('about'); }} 
-            className="hover:text-gray-300 transition-colors py-3 md:py-0 relative group"
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'about' ? 'text-white' : 'text-gray-400'}`}
           >
-            About Me
-            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+            About
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'about' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+          <a 
+            href="#portfolio" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('portfolio'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'portfolio' ? 'text-white' : 'text-gray-400'}`}
+          >
+            Portfolio
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'portfolio' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
           <a 
             href="#reviews" 
             onClick={(e) => { e.preventDefault(); scrollToSection('reviews'); }} 
-            className="hover:text-gray-300 transition-colors py-3 md:py-0 relative group"
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'reviews' ? 'text-white' : 'text-gray-400'}`}
           >
             Reviews
-            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'reviews' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
           <a 
             href="#pricing" 
             onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }} 
-            className="hover:text-gray-300 transition-colors py-3 md:py-0 relative group"
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'pricing' ? 'text-white' : 'text-gray-400'}`}
           >
             Pricing
-            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'pricing' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+          <a 
+            href="#contact" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'contact' ? 'text-white' : 'text-gray-400'}`}
+          >
+            Contact
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'contact' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+          <a 
+            href="https://instagram.com/dh.flixs/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="flex items-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+          >
+            <Instagram size={18} />
+            <span>Instagram</span>
           </a>
           <button 
             onClick={openScheduling} 
-            className="bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 mt-4 md:mt-0 hover:shadow-lg hover:-translate-y-1"
+            className="bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
           >
-            Schedule Now
+            Book Now
           </button>
         </nav>
       </header>
 
       <main className="pt-16">
-        {/* Hero section */}
-        <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 md:pt-24">
+        {/* Hero section with optimized slideshow */}
+        <section id="home" className="relative min-h-screen flex flex-col items-center justify-between pt-20 md:pt-24">
           <div className="container mx-auto px-4 flex flex-col items-center relative z-20 mb-12">
             <div className="text-white w-full flex flex-col items-center mb-8 mt-8 opacity-0 animate-fade-in">
-              <div className="max-w-md w-full text-center">
-                <h1 className="text-5xl md:text-6xl mb-8 font-bold">dh.flixs</h1>
+              <div className="max-w-4xl w-full text-center">
+                <h1 className="text-5xl md:text-6xl mb-8 font-bold">David Huan Media | dh.flixs</h1>
+                <h3 className="text-xl md:text-2xl mb-6 font-medium">Professional Sports Photography & Videography</h3>
                 <div className="w-24 h-0.5 bg-white mx-auto mb-8"></div>
-                <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-4">
-                  <h2 className="text-4xl mt-2 mb-4">David Huan</h2>
-                  <div className="text-center md:text-right">
-                    <h3 className="text-xl md:text-2xl mt-1 mb-1 font-bold">photographer videographer</h3>
-                    <p className="text-lg mt-3 italic">capturing moments, creating memories</p>
-                  </div>
+                <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
+                  <button 
+                    onClick={openScheduling} 
+                    className="bg-white text-black px-8 py-3 rounded-full text-lg font-bold hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    Schedule Now
+                  </button>
+                  <a 
+                    href="https://instagram.com/dh.flixs/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center justify-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-8 py-3 rounded-full text-lg font-bold hover:opacity-90 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <Instagram size={20} />
+                    <span>Instagram</span>
+                  </a>
                 </div>
-                <button 
-                  onClick={openScheduling} 
-                  className="inline-block mt-8 bg-white text-black px-8 py-3 rounded-full text-lg font-bold hover:bg-gray-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-                >
-                  Schedule Now
-                </button>
               </div>
             </div>
           </div>
           
-          {/* Enhanced Slideshow */}
+          {/* Optimized Slideshow - fewer images, better performance */}
           <div 
             className="w-full h-[50vh] md:h-[70vh] relative overflow-hidden rounded-lg mx-auto max-w-6xl px-4 mb-8 md:mb-0 opacity-0 animate-fade-in animation-delay-500"
             onMouseEnter={pauseSlideshow}
             onMouseLeave={resumeSlideshow}
           >
-            {shuffledPhotos.map((photo, index) => (
+            {heroSlideshow.map((photo, index) => (
               <div 
                 key={index} 
                 className={`absolute inset-0 transition-all duration-600 ease-in-out ${
@@ -317,13 +602,15 @@ const Portfolio = () => {
                 }`}
               >
                 <Suspense fallback={<div className="w-full h-full bg-gray-900 flex items-center justify-center">Loading...</div>}>
-                  <div className="w-full h-full flex items-center justify-center bg-black">
-                    <LazyImage 
-                      src={photo.src} 
-                      alt={photo.caption} 
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
+                  {(loadedImages[photo.src] || index === currentSlide) && (
+                    <div className="w-full h-full flex items-center justify-center bg-black">
+                      <LazyImage 
+                        src={photo.src} 
+                        alt={photo.caption} 
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
                 </Suspense>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-100 flex items-end p-6">
                   <div className="w-full flex justify-between items-end">
@@ -362,9 +649,9 @@ const Portfolio = () => {
               <ChevronRight size={28} />
             </button>
             
-            {/* Slide Indicators */}
-            <div className="absolute bottom-20 left-0 right-0 flex justify-center gap-2 z-20">
-              {shuffledPhotos.length > 0 && shuffledPhotos.slice(0, Math.min(7, shuffledPhotos.length)).map((_, index) => (
+            {/* Slide Indicators - simplified */}
+            <div className="absolute bottom-20 left-0 right-0 flex justify-center gap-2 z-20 px-4">
+              {heroSlideshow.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => {
@@ -386,8 +673,8 @@ const Portfolio = () => {
           </div>
           
           <div className="max-w-4xl w-full text-center mt-12 mb-20 px-4 opacity-0 animate-fade-in animation-delay-700">
-            <h2 className="text-4xl md:text-6xl font-light">
-              Helping <u className="underline-offset-8 decoration-1">record your story</u>.
+            <h2 className="text-4xl md:text-5xl font-light">
+              Bringing <u className="underline-offset-8 decoration-1">your athletic journey</u> to life.
             </h2>
           </div>
         </section>
@@ -433,11 +720,17 @@ const Portfolio = () => {
           </div>
         </section>
         
+        {/* Portfolio section */}
+        {renderPortfolio()}
+
+        {/* Contact section */}
+        {renderContact()}
+        
         {/* Reviews section */}
         <section 
           id="reviews" 
           className="py-20 px-4 bg-black opacity-0 transition-opacity duration-1000"
-          ref={el => sectionRefs.current[1] = el}
+          ref={el => sectionRefs.current[2] = el}
         >
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl text-center mb-12 relative">
@@ -473,6 +766,8 @@ const Portfolio = () => {
           </div>
         </section>
 
+         
+
         {/* Services & Pricing section */}
         <section 
           id="pricing" 
@@ -494,21 +789,24 @@ const Portfolio = () => {
           </div>
         </section>
 
+       
+
         {/* CTA section */}
         <section 
           className="py-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black opacity-0 transition-opacity duration-1000"
           ref={el => sectionRefs.current[3] = el}
         >
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl mb-12">Capturing Moments, Creating Memories</h2>
+            <h2 className="text-4xl md:text-5xl mb-12">Elevating Athletic Excellence Through Visual Storytelling</h2>
             <div className="flex flex-col md:flex-row justify-center items-center gap-6">
               <a
                 href="https://instagram.com/dh.flixs/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white text-black px-8 py-3 rounded-full text-lg font-bold hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg w-full md:w-auto"
+                className="flex items-center justify-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-8 py-3 rounded-full text-lg font-bold hover:opacity-90 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg w-full md:w-auto"
               >
-                Instagram
+                <Instagram size={20} />
+                <span>Instagram</span>
               </a>
               <button
                 onClick={openScheduling}
@@ -516,6 +814,14 @@ const Portfolio = () => {
               >
                 Schedule Now
               </button>
+              <a
+                href="https://linktr.ee/dh.flixs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full text-lg font-bold hover:bg-white hover:text-black transition-all duration-300 hover:-translate-y-1 hover:shadow-lg w-full md:w-auto"
+              >
+                All Links
+              </a>
             </div>
           </div>
         </section>
@@ -549,7 +855,92 @@ const Portfolio = () => {
         </div>
       )}
       
-      {/* Add CSS animations */}
+      {/* Gallery Slideshow Modal */}
+      {galleryOpen && selectedCategory && (
+        <div className="fixed inset-0 bg-black bg-opacity-95 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+          <div className="w-full h-full max-w-6xl mx-auto p-6 relative animate-scale-in">
+            <button 
+              onClick={closeGallery} 
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+            >
+              <X size={28} />
+            </button>
+            
+            <div className="w-full h-full flex flex-col">
+              <h3 className="text-2xl font-medium mb-4 text-center">
+                {portfolioCategories.find(c => c.id === selectedCategory)?.title}
+              </h3>
+              
+              <div className="relative flex-1 overflow-hidden">
+                {portfolioCategories.find(c => c.id === selectedCategory)?.photos.map((photo, index) => (
+                  <div 
+                    key={index} 
+                    className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                      index === galleryCurrentSlide 
+                        ? 'opacity-100 z-10 scale-100' 
+                        : 'opacity-0 z-0 scale-105'
+                    }`}
+                  >
+                    <Suspense fallback={<div className="w-full h-full bg-gray-900 flex items-center justify-center">Loading...</div>}>
+                      <div className="w-full h-full flex items-center justify-center">
+                        <LazyImage 
+                          src={photo.src} 
+                          alt={photo.caption} 
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                    </Suspense>
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                      <p className="text-lg">{photo.caption}</p>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Navigation Buttons */}
+                <button 
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 z-20 transition-all duration-300 hover:scale-110"
+                  onClick={goToPrevGallerySlide}
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft size={32} />
+                </button>
+                
+                <button 
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 z-20 transition-all duration-300 hover:scale-110"
+                  onClick={goToNextGallerySlide}
+                  aria-label="Next slide"
+                >
+                  <ChevronRight size={32} />
+                </button>
+              </div>
+              
+              {/* Slide indicators */}
+              <div className="flex justify-center gap-2 mt-4">
+                {portfolioCategories.find(c => c.id === selectedCategory)?.photos.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setGalleryCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === galleryCurrentSlide ? 'bg-white w-4' : 'bg-white/50'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+              
+              <div className="mt-6 text-center">
+                <button 
+                  onClick={openScheduling}
+                  className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  Book a Shoot
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; }

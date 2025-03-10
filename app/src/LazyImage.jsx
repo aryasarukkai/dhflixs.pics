@@ -1,34 +1,54 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 
-const LazyImage = ({ src, alt, className, isGalleryItem, eventName }) => {
-  if (isGalleryItem) {
-    return (
-      <div className="relative group">
-        <img
-          src={src}
-          alt={alt}
-          className={`${className} transition-transform duration-500 group-hover:scale-110`}
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <p className="text-white text-lg mb-2">{eventName}</p>
-          <div className="space-x-2">
-            <button className="bg-white text-black px-4 py-2 rounded">View Full Gallery</button>
-            <button className="bg-white text-black px-4 py-2 rounded">Schedule</button>
-          </div>
-        </div>
-      </div>
-    )
-  }
+const LazyImage = ({ src, alt, className }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    // Reset state when src changes
+    setIsLoaded(false);
+    setError(false);
+    
+    // Create a new image to preload
+    const img = new Image();
+    img.src = src;
+    
+    img.onload = () => {
+      setIsLoaded(true);
+    };
+    
+    img.onerror = () => {
+      setError(true);
+    };
+  }, [src]);
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      loading="lazy"
-    />
-  )
-}
+    <>
+      {!isLoaded && !error && (
+        <div className={`flex items-center justify-center bg-gray-900 ${className}`}>
+          <div className="animate-pulse flex space-x-2">
+            <div className="h-2 w-2 bg-white rounded-full"></div>
+            <div className="h-2 w-2 bg-white rounded-full"></div>
+            <div className="h-2 w-2 bg-white rounded-full"></div>
+          </div>
+        </div>
+      )}
+      
+      {error && (
+        <div className={`flex items-center justify-center bg-gray-900 ${className}`}>
+          <div className="text-white">Image failed to load</div>
+        </div>
+      )}
+      
+      <img 
+        src={src} 
+        alt={alt} 
+        className={`${className} ${isLoaded ? 'block' : 'hidden'}`}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setError(true)}
+      />
+    </>
+  );
+};
 
-export default LazyImage
+export default LazyImage;
