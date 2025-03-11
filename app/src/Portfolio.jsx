@@ -103,20 +103,26 @@ const portfolioCategories = [
 
 // Reviews data
 const reviewsData = [
-  { 
-    stars: 5, 
-    text: "David has a keen eye for detail, and it shows. His variety of photos and their quality is no joke either. Having had the pleasure of working with him before, its apparent that he takes time and consideration into the selection and production of his works.", 
-    name: "Viggo J." 
+  {
+    stars: 5,
+    text: "David is professional, reliable, and communicates brilliantly. Above all, he's highly talented and his videos are fantastic. He provided me with exactly what I wanted and I cannot recommend him highly enough.",
+    name: "Player ONE Performance",
+    occupation: "High Performance Soccer Training & Camps",
+    logo: "/p1pl.png"
   },
-  { 
-    stars: 5, 
-    text: "David took incredible photos of our charity show and captured every single moment beautifully! He's very accommodating and easy to work with!", 
-    name: "Shaan J." 
+  {
+    stars: 5,
+    text: "David has a keen eye for detail, and it shows. His variety of photos and their quality is no joke either. Having had the pleasure of working with him before, its apparent that he takes time and consideration into the selection and production of his works.",
+    name: "Viggo J.",
+    occupation: "High School Student",
+    logo: null
   },
-  { 
-    stars: 5, 
-    text: "David is absolutely amazing! His eye for detail, creativity, and ability to capture perfect moments made all our photos perfect!", 
-    name: "Savio S." 
+  {
+    stars: 5,
+    text: "David took incredible photos of our charity show and captured every single moment beautifully! He's very accommodating and easy to work with!",
+    name: "Shaan J.",
+    occupation: "High School Student",
+    logo: null
   }
 ];
 
@@ -406,7 +412,7 @@ const Portfolio = () => {
           
           <div className="bg-gray-900 bg-opacity-40 p-8 rounded-lg">
             <div className="text-center mb-8">
-              <p className="text-xl mb-6">Please contact me before booking to discuss your project requirements and details.</p>
+              <p className="text-xl mb-6">Please contact us before booking to discuss your project requirements and details.</p>
               
               <div className="flex flex-col md:flex-row justify-center items-center gap-8 mb-8">
                 <div className="flex items-center">
@@ -557,9 +563,10 @@ const Portfolio = () => {
             <div className="text-white w-full flex flex-col items-center mb-8 mt-8 opacity-0 animate-fade-in">
               <div className="max-w-4xl w-full text-center">
                 <h1 className="text-5xl md:text-6xl mb-8 font-bold">David Huan Media | dh.flixs</h1>
-                <h3 className="text-xl md:text-2xl mb-6 font-medium">Professional Sports Photography & Videography | Bay Area, CA</h3>
+                <h3 className="text-2xl md:text-2xl mb-6 font-medium">Professional Sports Photography & Videography</h3>
+                <areatext id="area" className="text-l text-green md:text-2xl mb-6 font-medium">📍 Bay Area, CA</areatext>
                 
-                <div className="w-24 h-0.5 bg-white mx-auto mb-6"></div>
+                <div className="w-24 h-0.5 mt-6 bg-white mx-auto mb-6"></div>
                 <a href="#contact" className="text-lg mb-8 font-light">Please <u>contact us</u> before booking! </a>
                 <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
                   <button 
@@ -668,11 +675,6 @@ const Portfolio = () => {
             </div>
           </div>
           
-          <div className="max-w-4xl w-full text-center mt-12 mb-20 px-4 opacity-0 animate-fade-in animation-delay-700">
-            <h2 className="text-4xl md:text-5xl font-light">
-              Bringing <u className="underline-offset-8 decoration-1">your athletic journey</u> to life.
-            </h2>
-          </div>
         </section>
 
         {/* Portfolio section */}
@@ -721,8 +723,8 @@ const Portfolio = () => {
 
 
         {/* Reviews section */}
-        <section 
-          id="reviews" 
+        <section
+          id="reviews"
           className="py-20 px-4 bg-black opacity-0 transition-opacity duration-1000"
           ref={el => sectionRefs.current[2] = el}
         >
@@ -731,26 +733,40 @@ const Portfolio = () => {
               Client Reviews
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
             </h2>
-            
             <div className="grid md:grid-cols-3 gap-8">
               {reviewsData.map((review, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="bg-gray-900 bg-opacity-40 p-8 rounded-lg transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-xl"
                 >
-                  <div className="text-yellow-400 text-xl mb-4">
+                  <div className="flex items-center mb-4">
+                    {review.logo ? (
+                      <img 
+                        src={review.logo} 
+                        alt={`${review.name} logo`} 
+                        className="w-10 h-10 rounded-full object-cover mr-4"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-4">
+                        <span className="text-xl font-bold">{review.name.charAt(0)}</span>
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-medium">{review.name}</p>
+                      <p className="text-sm text-gray-400">{review.occupation}</p>
+                    </div>
+                  </div>
+                  <div className="text-yellow-400 text-xl mb-3">
                     {"★".repeat(review.stars)}
                   </div>
                   <p className="italic mb-6">{review.text}</p>
-                  <p className="text-right font-medium">— {review.name}</p>
                 </div>
               ))}
             </div>
-            
             <div className="text-center mt-12">
-              <a 
-                href="https://dhflixs.setmore.com/reviews" 
-                target="_blank" 
+              <a
+                href="https://dhflixs.setmore.com/reviews"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block border border-white px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors duration-300"
               >
