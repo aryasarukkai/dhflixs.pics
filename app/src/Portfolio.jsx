@@ -329,8 +329,8 @@ const Portfolio = () => {
   // Render the Portfolio view - with improved hover effects and buttons
   const renderPortfolio = () => {
     return (
-      <section 
-        id="portfolio" 
+      <section
+        id="portfolio"
         className="py-20 px-4 opacity-0 transition-opacity duration-1000"
         ref={el => sectionRefs.current[1] = el}
       >
@@ -339,28 +339,29 @@ const Portfolio = () => {
             Portfolio
             <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
           </h2>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Portfolio categories with improved hover interaction */}
+            {/* Portfolio categories with mobile-first interaction */}
             {portfolioCategories.map((category) => (
-              <div 
+              <div
                 key={category.id}
                 className="overflow-hidden rounded-lg group relative cursor-pointer"
               >
                 <div className="aspect-w-4 aspect-h-3">
                   <Suspense fallback={<div className="w-full h-full bg-gray-900 flex items-center justify-center">Loading...</div>}>
-                    <LazyImage 
+                    <LazyImage
                       src={category.coverImage}
-                      alt={category.title} 
+                      alt={category.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   </Suspense>
                 </div>
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex flex-col items-center gap-4">
-                    <h3 className="text-xl font-medium">{category.title}</h3>
+                {/* Overlay that's visible by default on mobile, with hover effects on desktop */}
+                <div className="absolute inset-0 bg-black bg-opacity-50 md:bg-opacity-0 md:group-hover:bg-opacity-50 transition-all duration-300">
+                  {/* Content container that's visible by default on mobile, with hover effects on desktop */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-100 md:opacity-0 md:invisible md:group-hover:opacity-100 md:group-hover:visible transform md:translate-y-8 md:group-hover:translate-y-0 transition-all duration-300">
+                    <h3 className="text-xl font-medium text-white">{category.title}</h3>
                     <div className="flex gap-4">
-                      <button 
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           openGallery(category.id);
@@ -369,7 +370,7 @@ const Portfolio = () => {
                       >
                         View Slideshow
                       </button>
-                      <button 
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           openScheduling();
@@ -383,15 +384,6 @@ const Portfolio = () => {
                 </div>
               </div>
             ))}
-          </div>
-          
-          <div className="text-center mt-12">
-            <button 
-              onClick={openScheduling}
-              className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-            >
-              Book a Shoot
-            </button>
           </div>
         </div>
       </section>
@@ -499,20 +491,20 @@ const Portfolio = () => {
             <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'home' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
           <a 
-            href="#about" 
-            onClick={(e) => { e.preventDefault(); scrollToSection('about'); }} 
-            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'about' ? 'text-white' : 'text-gray-400'}`}
-          >
-            About
-            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'about' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
-          </a>
-          <a 
             href="#portfolio" 
             onClick={(e) => { e.preventDefault(); scrollToSection('portfolio'); }} 
             className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'portfolio' ? 'text-white' : 'text-gray-400'}`}
           >
             Portfolio
             <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'portfolio' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+          <a 
+            href="#about" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('about'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'about' ? 'text-white' : 'text-gray-400'}`}
+          >
+            About
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'about' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
           <a 
             href="#reviews" 
@@ -522,14 +514,7 @@ const Portfolio = () => {
             Reviews
             <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'reviews' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
-          <a 
-            href="#pricing" 
-            onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }} 
-            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'pricing' ? 'text-white' : 'text-gray-400'}`}
-          >
-            Pricing
-            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'pricing' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
-          </a>
+
           <a 
             href="#contact" 
             onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }} 
@@ -538,6 +523,15 @@ const Portfolio = () => {
             Contact
             <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'contact' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
+          <a 
+            href="#pricing" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'pricing' ? 'text-white' : 'text-gray-400'}`}
+          >
+            Pricing
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'pricing' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+          
           <a 
             href="https://instagram.com/dh.flixs/" 
             target="_blank" 
@@ -563,8 +557,10 @@ const Portfolio = () => {
             <div className="text-white w-full flex flex-col items-center mb-8 mt-8 opacity-0 animate-fade-in">
               <div className="max-w-4xl w-full text-center">
                 <h1 className="text-5xl md:text-6xl mb-8 font-bold">David Huan Media | dh.flixs</h1>
-                <h3 className="text-xl md:text-2xl mb-6 font-medium">Professional Sports Photography & Videography</h3>
-                <div className="w-24 h-0.5 bg-white mx-auto mb-8"></div>
+                <h3 className="text-xl md:text-2xl mb-6 font-medium">Professional Sports Photography & Videography | Bay Area, CA</h3>
+                
+                <div className="w-24 h-0.5 bg-white mx-auto mb-6"></div>
+                <a href="#contact" className="text-lg mb-8 font-light">Please <u>contact us</u> before booking! </a>
                 <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
                   <button 
                     onClick={openScheduling} 
@@ -679,6 +675,9 @@ const Portfolio = () => {
           </div>
         </section>
 
+        {/* Portfolio section */}
+        {renderPortfolio()}
+
         {/* About Me section */}
         <section 
           id="about" 
@@ -702,7 +701,7 @@ const Portfolio = () => {
               </div>
               <div className="flex flex-col justify-center space-y-6">
                 <p>
-                I'm David Huan, a sports photographer and videographer with a passion for capturing the game's most unforgettable moments. Whether it's a fast-paced highlight reel or a perfectly timed action shot, my goal is to showcase the skill, emotion, and dedication of every athlete. Based in the Bay Area, I've worked with teams and programs to create professional, high-impact visuals that leave a lasting impression.
+                I'm David Huan, a sports photographer and videographer in the California Bay Area with a passion for capturing the game's most unforgettable moments. Whether it's a fast-paced highlight reel or a perfectly timed action shot, my goal is to showcase the skill, emotion, and dedication of every athlete. Based in the Bay Area, I've worked with teams and programs to create professional, high-impact visuals that leave a lasting impression.
                 </p>
                 <p>
                 David Huan Media delivers high-quality sports photography and videography, capturing the intensity, passion, and raw energy of every game. Specializing in cinematic hype videos and action-packed photography, we create professional content that brings athletes' moments to life. From school teams to elite club programs, our visuals are crafted to stand out.
@@ -719,13 +718,8 @@ const Portfolio = () => {
             </div>
           </div>
         </section>
-        
-        {/* Portfolio section */}
-        {renderPortfolio()}
 
-        {/* Contact section */}
-        {renderContact()}
-        
+
         {/* Reviews section */}
         <section 
           id="reviews" 
@@ -765,7 +759,14 @@ const Portfolio = () => {
             </div>
           </div>
         </section>
+        {/* Contact section */}
+        {renderContact()}
+        
+        
 
+        
+        
+        
          
 
         {/* Services & Pricing section */}
