@@ -7,7 +7,6 @@ const LazyImage = lazy(() => import('./LazyImage'));
 const heroSlideshow = [
   {src: '/sjevrsl3(1).jpg', caption: 'San Jose Earthquakes vs Real Salt Lake'},
   {src: '/hsvfb9(1).jpg', caption: 'High School Football'},
-  {src: '/vbs6(1).jpg', caption: 'High School Boys Soccer'},
   {src: '/hsjbb3(1).jpg', caption: 'High School Basketball'},
   {src: '/gvb8(1).jpg', caption: 'High School Girls Volleyball'},
   {src: '/gfhsn2(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
@@ -34,7 +33,7 @@ const portfolioCategories = [
     title: 'High School Football',
     coverImage: '/hsvfb6(1).jpg',
     photos: [
-      {src: '/main(1).jpg', caption: 'High School Football'},
+      
       {src: '/hsvfb1(1).jpg', caption: 'High School Football'},
       {src: '/hsvfb2(1).jpg', caption: 'High School Football'},
       {src: '/hsvfb3(1).jpg', caption: 'High School Football'},
@@ -51,6 +50,7 @@ const portfolioCategories = [
     title: 'High School Soccer',
     coverImage: '/vbs1(1).jpg',
     photos: [
+      {src: '/main(1).jpg', caption: 'High School Boys Soccer'},
       {src: '/vbs1(1).jpg', caption: 'High School Boys Soccer'},
       {src: '/vbs2(1).jpg', caption: 'High School Boys Soccer'},
       {src: '/vbs3(1).jpg', caption: 'High School Boys Soccer'},
@@ -426,7 +426,7 @@ const Portfolio = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
-                  <a href="tel:+14085551234" className="hover:text-gray-300 transition-colors">(669) 639-0896</a>
+                  <a href="tel:+6696390896" className="hover:text-gray-300 transition-colors">(669) 639-0896</a>
                 </div>
               </div>
               
@@ -945,14 +945,6 @@ const Portfolio = () => {
                 ))}
               </div>
               
-              <div className="mt-6 text-center">
-                <button 
-                  onClick={openScheduling}
-                  className="inline-block bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  Book a Shoot
-                </button>
-              </div>
             </div>
           </div>
         </div>
