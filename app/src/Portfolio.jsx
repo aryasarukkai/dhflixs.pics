@@ -419,7 +419,7 @@ const Portfolio = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <a href="mailto:davidhuanmedia@gmail.com" className="hover:text-gray-300 transition-colors">davidhuanmedia@gmail.com</a>
+                  <a href="mailto:david@dvhvisuals.com" className="hover:text-gray-300 transition-colors">david@dvhvisuals.com</a>
                 </div>
                 
                 <div className="flex items-center">
@@ -474,9 +474,9 @@ const Portfolio = () => {
       {/* Header */}
       <header className={`fixed top-0 left-0 right-0 bg-black bg-opacity-90 backdrop-blur-md text-white py-5 flex justify-between items-center z-50 transition-transform duration-300 ${!isHeaderVisible ? '-translate-y-full' : 'translate-y-0'}`}>
         <div className="flex items-center ml-6 md:ml-16">
-          <img src="/davidhuanmedia.jpg" alt="David Huan Media Logo" className="h-12 w-12 rounded-full mr-4" />
+          <img src="/davidhuanmedia.jpg" alt="DVH Visuals Logo" className="h-12 w-12 rounded-full mr-4" />
           <div className="flex flex-col">
-            <div className="text-xl font-medium">David Huan Media | dh.flixs</div>
+            <div className="text-xl font-medium">DVH Visuals | dh.flixs</div>
             <div className="text-sm text-gray-300">Sports Media Agency</div>
           </div>
         </div>
@@ -558,11 +558,11 @@ const Portfolio = () => {
 
       <main className="pt-16">
         {/* Hero section with optimized slideshow */}
-        <section id="home" className="relative min-h-screen flex flex-col items-center justify-between pt-20 md:pt-24">
+        <section id="home" className="relative min-h-screen flex flex-col items-c</main>enter justify-between pt-20 md:pt-24">
           <div className="container mx-auto px-4 flex flex-col items-center relative z-20 mb-12">
             <div className="text-white w-full flex flex-col items-center mb-8 mt-8 opacity-0 animate-fade-in">
               <div className="max-w-4xl w-full text-center">
-                <h1 className="text-5xl md:text-6xl mb-8 font-bold">David Huan Media | dh.flixs</h1>
+                <h1 className="text-5xl md:text-6xl mb-8 font-bold">DVH Visuals | dh.flixs</h1>
                 <h3 className="text-2xl md:text-2xl mb-6 font-medium">Professional Sports Photography & Videography</h3>
                 <areatext id="area" className="text-l text-green md:text-2xl mb-6 font-medium">📍 Bay Area, CA</areatext>
                 
@@ -689,7 +689,7 @@ const Portfolio = () => {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl text-center mb-12 relative">
               About Me
-              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
+              <span className="absolute bottom-</div>0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -706,7 +706,7 @@ const Portfolio = () => {
                 I'm David Huan, a sports photographer and videographer in the California Bay Area with a passion for capturing the game's most unforgettable moments. Whether it's a fast-paced highlight reel or a perfectly timed action shot, my goal is to showcase the skill, emotion, and dedication of every athlete. Based in the Bay Area, I've worked with teams and programs to create professional, high-impact visuals that leave a lasting impression.
                 </p>
                 <p>
-                David Huan Media delivers high-quality sports photography and videography, capturing the intensity, passion, and raw energy of every game. Specializing in cinematic hype videos and action-packed photography, we create professional content that brings athletes' moments to life. From school teams to elite club programs, our visuals are crafted to stand out.
+                DVH Visuals delivers high-quality sports photography and videography, capturing the intensity, passion, and raw energy of every game. Specializing in cinematic hype videos and action-packed photography, we create professional content that brings athletes' moments to life. From school teams to elite club programs, our visuals are crafted to stand out.
                 </p>
                 <div className="pt-4">
                   <button 
@@ -846,9 +846,9 @@ const Portfolio = () => {
         {/* Footer */}
         <footer className="bg-black text-white text-center p-6 border-t border-gray-800">
           <p className="mt-6 mb-4 opacity-80">
-            &copy; 2025 David Huan Media. All rights reserved.
+            &copy; 2025 DVH Visuals. All rights reserved.
             <br /><br />
-            Website developed exclusively for David Huan Media by Arya Sarukkai.
+            Website developed exclusively for DVH Visuals by Arya Sarukkai.
           </p>
         </footer>
       </main>
