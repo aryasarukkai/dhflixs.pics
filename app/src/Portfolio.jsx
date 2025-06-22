@@ -765,7 +765,7 @@ const Portfolio = () => {
             </div>
             <div className="text-center mt-12">
               <a
-                href="https://dhflixs.setmore.com/reviews"
+                href="https://dvhvisuals.setmore.com/reviews"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block border border-white px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors duration-300"
@@ -798,7 +798,7 @@ const Portfolio = () => {
             </h2>
             <div className="overflow-hidden rounded-3xl shadow-2xl">
               <iframe 
-                src="https://dhflixs.setmore.com" 
+                src="https://dvhvisuals.setmore.com" 
                 title="Pricing and Scheduling"
                 className="w-full h-[800px] border-none"
               />
@@ -864,7 +864,7 @@ const Portfolio = () => {
               <X size={28} />
             </button>
             <iframe 
-              src="https://dhflixs.setmore.com" 
+              src="https://dvhvisuals.setmore.com" 
               title="Schedule Appointment"
               className="w-full h-full border-none mt-2 rounded-2xl"
             />
