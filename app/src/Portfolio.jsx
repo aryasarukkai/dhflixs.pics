@@ -426,7 +426,7 @@ const Portfolio = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
-                  <a href="tel:+6696390896" className="hover:text-gray-300 transition-colors">(669) 639-0896</a>
+                  <a href="tel:+14086475135" className="hover:text-gray-300 transition-colors">(408) 647-5135</a>
                 </div>
               </div>
               
@@ -687,9 +687,9 @@ const Portfolio = () => {
           ref={el => sectionRefs.current[0] = el}
         >
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl text-center mb-12 relative">
+            <h2 className="text-4xl text-center mt-8 mb-12 relative">
               About Me
-              <span className="absolute bottom-</div>0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
