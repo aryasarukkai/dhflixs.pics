@@ -98,6 +98,31 @@ const portfolioCategories = [
       {src: '/gfhsn6(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
       {src: '/gfhsn7(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
     ]
+  },
+  {
+    id: 'videos',
+    title: 'Video Portfolio',
+    coverImage: '/hsvfb1(1).jpg',
+    videos: [
+      {
+        title: 'High School Football Hype Video',
+        description: 'Cinematic hype video showcasing the intensity of high school football',
+        thumbnail: '/hsvfb1(1).jpg',
+        embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
+      },
+      {
+        title: 'Basketball Highlight Reel',
+        description: 'Fast-paced highlight reel capturing the best moments from the season',
+        thumbnail: '/hsjbb1(1).jpg',
+        embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
+      },
+      {
+        title: 'MLS Soccer Action',
+        description: 'Professional soccer coverage from San Jose Earthquakes matches',
+        thumbnail: '/sjevrsl1(1).jpg',
+        embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
+      }
+    ]
   }
 ];
 
@@ -126,6 +151,45 @@ const reviewsData = [
   }
 ];
 
+// News/Blog data
+const newsData = [
+  {
+    id: 1,
+    title: "Bay Area High School Football Season Highlights",
+    excerpt: "Capturing the intensity and passion of local high school football teams across the Bay Area...",
+    date: "2025-01-15",
+    image: "/hsvfb1(1).jpg",
+    content: "This football season has been incredible for capturing the raw emotion and athletic prowess of Bay Area high school teams. From game-winning touchdowns to team celebrations, every moment tells a story of dedication and teamwork."
+  },
+  {
+    id: 2,
+    title: "Behind the Scenes: San Jose Earthquakes Photography",
+    excerpt: "Working with professional MLS teams brings unique challenges and rewards...",
+    date: "2025-01-10",
+    image: "/sjevrsl3(1).jpg",
+    content: "Being on the sidelines during San Jose Earthquakes matches provides an incredible perspective on professional soccer. The speed, precision, and intensity at this level requires specialized techniques and equipment to capture those perfect moments."
+  },
+  {
+    id: 3,
+    title: "The Art of Sports Videography: Creating Compelling Hype Videos",
+    excerpt: "How we transform raw game footage into cinematic experiences that motivate and inspire...",
+    date: "2025-01-05",
+    image: "/gvb3(1).jpg",
+    content: "Creating hype videos isn't just about editing highlights together. It's about understanding the emotion, the story, and the passion behind each play. We focus on cinematic techniques that elevate sports content to an art form."
+  }
+];
+
+// Google Business data
+const googleBusinessData = {
+  name: "DVH Visuals",
+  rating: 5.0,
+  reviewCount: 12,
+  address: "Bay Area, CA",
+  phone: "(408) 647-5135",
+  website: "https://dvhvisuals.com",
+  description: "Professional sports photography and videography across the Bay Area. Specializing in transforming real-time action into lasting memories."
+};
+
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
@@ -143,6 +207,15 @@ const Portfolio = () => {
   
   // Image loading optimization
   const [loadedImages, setLoadedImages] = useState({});
+  
+  // News section state
+  const [selectedNews, setSelectedNews] = useState(null);
+  const [newsModalOpen, setNewsModalOpen] = useState(false);
+  
+  // Video gallery state
+  const [videoGalleryOpen, setVideoGalleryOpen] = useState(false);
+  const [selectedVideoCategory, setSelectedVideoCategory] = useState(null);
+  const [videoCurrentSlide, setVideoCurrentSlide] = useState(0);
   
   // Refs for sections to track visibility
   const sectionRefs = useRef([]);
@@ -215,7 +288,7 @@ const Portfolio = () => {
       });
 
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'portfolio', 'reviews', 'pricing', 'contact'];
+      const sections = ['home', 'about', 'portfolio', 'reviews', 'news', 'pricing', 'contact'];
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section) {
@@ -332,6 +405,46 @@ const Portfolio = () => {
     setGalleryCurrentSlide(0);
   };
 
+  // News functions
+  const openNews = (newsItem) => {
+    setSelectedNews(newsItem);
+    setNewsModalOpen(true);
+  };
+
+  const closeNews = () => {
+    setNewsModalOpen(false);
+    setSelectedNews(null);
+  };
+
+  // Video gallery functions
+  const openVideoGallery = (categoryId) => {
+    setSelectedVideoCategory(categoryId);
+    setVideoCurrentSlide(0);
+    setVideoGalleryOpen(true);
+  };
+
+  const closeVideoGallery = () => {
+    setVideoGalleryOpen(false);
+    setSelectedVideoCategory(null);
+    setVideoCurrentSlide(0);
+  };
+
+  const goToNextVideo = () => {
+    if (!selectedVideoCategory) return;
+    const category = portfolioCategories.find(c => c.id === selectedVideoCategory);
+    setVideoCurrentSlide((prev) => 
+      (prev + 1) % category.videos.length
+    );
+  };
+
+  const goToPrevVideo = () => {
+    if (!selectedVideoCategory) return;
+    const category = portfolioCategories.find(c => c.id === selectedVideoCategory);
+    setVideoCurrentSlide((prev) => 
+      (prev - 1 + category.videos.length) % category.videos.length
+    );
+  };
+
   // Render the Portfolio view - with improved hover effects and buttons
   const renderPortfolio = () => {
     return (
@@ -370,11 +483,15 @@ const Portfolio = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          openGallery(category.id);
+                          if (category.videos) {
+                            openVideoGallery(category.id);
+                          } else {
+                            openGallery(category.id);
+                          }
                         }}
                         className="bg-white text-black px-4 py-2 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1"
                       >
-                        View Slideshow
+                        {category.videos ? 'View Videos' : 'View Slideshow'}
                       </button>
                       <button
                         onClick={(e) => {
@@ -390,6 +507,137 @@ const Portfolio = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Render the News section
+  const renderNews = () => {
+    return (
+      <section
+        id="news"
+        className="py-20 px-4 opacity-0 transition-opacity duration-1000"
+        ref={el => sectionRefs.current[4] = el}
+      >
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl text-center mb-12 relative">
+            Sports News & Updates
+            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {newsData.map((news) => (
+              <div
+                key={news.id}
+                className="bg-gray-900 bg-opacity-40 rounded-lg overflow-hidden hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
+                onClick={() => openNews(news)}
+              >
+                <div className="aspect-w-16 aspect-h-9">
+                  <Suspense fallback={<div className="w-full h-48 bg-gray-800 flex items-center justify-center">Loading...</div>}>
+                    <LazyImage
+                      src={news.image}
+                      alt={news.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  </Suspense>
+                </div>
+                <div className="p-6">
+                  <div className="text-sm text-gray-400 mb-2">{new Date(news.date).toLocaleDateString()}</div>
+                  <h3 className="text-xl font-medium mb-3">{news.title}</h3>
+                  <p className="text-gray-300 mb-4">{news.excerpt}</p>
+                  <button className="text-white hover:text-gray-300 transition-colors font-medium">
+                    Read More →
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Render the Google Business section
+  const renderGoogleBusiness = () => {
+    return (
+      <section className="py-12 px-4 bg-gray-900 bg-opacity-40">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-medium mb-4">Find Us on Google</h3>
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-yellow-400">{googleBusinessData.rating}</div>
+                <div className="text-yellow-400 text-xl mb-2">{"★".repeat(Math.floor(googleBusinessData.rating))}</div>
+                <div className="text-gray-300">{googleBusinessData.reviewCount} Google Reviews</div>
+              </div>
+              <div className="text-center md:text-left">
+                <h4 className="text-xl font-medium mb-2">{googleBusinessData.name}</h4>
+                <p className="text-gray-300 mb-2">{googleBusinessData.address}</p>
+                <p className="text-gray-300 mb-4">{googleBusinessData.phone}</p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a
+                    href="https://g.co/kgs/hqd62gq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
+                  >
+                    View on Google
+                  </a>
+                  <a
+                    href="https://www.google.com/search?kgmid=/g/11yfdbb17_&hl=en-US&q=DVH+Visuals&shndl=30&shem=lcuae&source=sh/x/loc/osrp/m5/1&kgs=eb5f183fb0b75b53#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors"
+                  >
+                    Write a Review
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Render Instagram feeds
+  const renderInstagramFeeds = () => {
+    return (
+      <section className="py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h3 className="text-2xl font-medium text-center mb-8">Follow Us on Instagram</h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="text-center">
+              <h4 className="text-xl mb-4">@dh.flixs (Personal)</h4>
+              <div className="bg-gray-900 bg-opacity-40 rounded-lg p-6">
+                <p className="text-gray-300 mb-4">Latest posts from my personal Instagram</p>
+                <a
+                  href="https://instagram.com/dh.flixs/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <Instagram size={20} />
+                  View Profile
+                </a>
+              </div>
+            </div>
+            <div className="text-center">
+              <h4 className="text-xl mb-4">@dvhvisuals (Business)</h4>
+              <div className="bg-gray-900 bg-opacity-40 rounded-lg p-6">
+                <p className="text-gray-300 mb-4">Latest posts from DVH Visuals</p>
+                <a
+                  href="https://instagram.com/dvhvisuals/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <Instagram size={20} />
+                  View Profile
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -519,6 +767,15 @@ const Portfolio = () => {
           >
             Reviews
             <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'reviews' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+
+          <a 
+            href="#news" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('news'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'news' ? 'text-white' : 'text-gray-400'}`}
+          >
+            News
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'news' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
 
           <a 
@@ -703,10 +960,10 @@ const Portfolio = () => {
               </div>
               <div className="flex flex-col justify-center space-y-6">
                 <p>
-                I'm David Huan, a sports photographer and videographer in the California Bay Area with a passion for capturing the game's most unforgettable moments. Whether it's a fast-paced highlight reel or a perfectly timed action shot, my goal is to showcase the skill, emotion, and dedication of every athlete. Based in the Bay Area, I've worked with teams and programs to create professional, high-impact visuals that leave a lasting impression.
+                I'm David Huan, the founder and lead creative behind DVH Visuals. For the past three years, I've specialized in sports photography and videography, working with high school teams, brands, club programs, and professional organizations like CONCACAF and the San Jose Earthquakes. I cover a wide range of sports, with a focus on football, soccer, basketball, and volleyball. From cinematic hype videos to clean highlight reels and action-packed photo sets, I handle everything from filming and editing to creative direction to ensure every project meets the standard I've built my name on. My goal is to capture the emotion, intensity, and story behind each moment, not just to document the game, but to bring it to life.
                 </p>
                 <p>
-                DVH Visuals delivers high-quality sports photography and videography, capturing the intensity, passion, and raw energy of every game. Specializing in cinematic hype videos and action-packed photography, we create professional content that brings athletes' moments to life. From school teams to elite club programs, our visuals are crafted to stand out.
+                DVH Visuals provides professional sports photography and videography across the Bay Area. We specialize in transforming real-time action into lasting memories, delivering dynamic game-day photos, electrifying highlight reels, hype videos, college recruitment content, media day portraits, and compelling event coverage. Trusted by local schools, athletes, teams, clubs, major brands, and professional organizations like CONCACAF and the San Jose Earthquakes, DVH Visuals captures the intensity of game day and turns it into captivating content that celebrates your achievements and brings your vision to life.
                 </p>
                 <div className="pt-4">
                   <button 
@@ -775,6 +1032,15 @@ const Portfolio = () => {
             </div>
           </div>
         </section>
+
+        {/* Google Business Integration */}
+        {renderGoogleBusiness()}
+
+        {/* News section */}
+        {renderNews()}
+
+        {/* Instagram feeds */}
+        {renderInstagramFeeds()}
         {/* Contact section */}
         {renderContact()}
         
@@ -945,6 +1211,120 @@ const Portfolio = () => {
                 ))}
               </div>
               
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Video Gallery Modal */}
+      {videoGalleryOpen && selectedVideoCategory && (
+        <div className="fixed inset-0 bg-black bg-opacity-95 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+          <div className="w-full h-full max-w-6xl mx-auto p-6 relative animate-scale-in">
+            <button 
+              onClick={closeVideoGallery} 
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+            >
+              <X size={28} />
+            </button>
+            
+            <div className="w-full h-full flex flex-col">
+              <h3 className="text-2xl font-medium mb-4 text-center">
+                {portfolioCategories.find(c => c.id === selectedVideoCategory)?.title}
+              </h3>
+              
+              <div className="relative flex-1 overflow-hidden">
+                {portfolioCategories.find(c => c.id === selectedVideoCategory)?.videos.map((video, index) => (
+                  <div 
+                    key={index} 
+                    className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                      index === videoCurrentSlide 
+                        ? 'opacity-100 z-10' 
+                        : 'opacity-0 z-0'
+                    }`}
+                  >
+                    <div className="w-full h-full flex flex-col items-center justify-center">
+                      <iframe
+                        src={video.embedUrl}
+                        title={video.title}
+                        className="w-full h-3/4 max-w-4xl rounded-lg"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                      <div className="mt-4 text-center">
+                        <h4 className="text-xl font-medium mb-2">{video.title}</h4>
+                        <p className="text-gray-300">{video.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Navigation Buttons */}
+                <button 
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 z-20 transition-all duration-300 hover:scale-110"
+                  onClick={goToPrevVideo}
+                  aria-label="Previous video"
+                >
+                  <ChevronLeft size={32} />
+                </button>
+                
+                <button 
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 z-20 transition-all duration-300 hover:scale-110"
+                  onClick={goToNextVideo}
+                  aria-label="Next video"
+                >
+                  <ChevronRight size={32} />
+                </button>
+              </div>
+              
+              {/* Video indicators */}
+              <div className="flex justify-center gap-2 mt-4">
+                {portfolioCategories.find(c => c.id === selectedVideoCategory)?.videos.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setVideoCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === videoCurrentSlide ? 'bg-white w-4' : 'bg-white/50'
+                    }`}
+                    aria-label={`Go to video ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* News Modal */}
+      {newsModalOpen && selectedNews && (
+        <div className="fixed inset-0 bg-black bg-opacity-95 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+          <div className="bg-gray-900 p-8 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative animate-scale-in mx-4">
+            <button 
+              onClick={closeNews} 
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            >
+              <X size={28} />
+            </button>
+            
+            <div className="mb-6">
+              <img 
+                src={selectedNews.image} 
+                alt={selectedNews.title} 
+                className="w-full h-64 object-cover rounded-lg mb-4"
+              />
+              <div className="text-sm text-gray-400 mb-2">
+                {new Date(selectedNews.date).toLocaleDateString()}
+              </div>
+              <h2 className="text-3xl font-bold mb-4">{selectedNews.title}</h2>
+              <p className="text-lg text-gray-300 leading-relaxed">{selectedNews.content}</p>
+            </div>
+            
+            <div className="text-center">
+              <button 
+                onClick={openScheduling}
+                className="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1"
+              >
+                Book Now
+              </button>
             </div>
           </div>
         </div>
