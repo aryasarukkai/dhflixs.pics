@@ -98,31 +98,28 @@ const portfolioCategories = [
       {src: '/gfhsn6(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
       {src: '/gfhsn7(1).jpg', caption: 'High School Girls Field Hockey Senior Night'},
     ]
+  }
+];
+
+// Video Portfolio data
+const videoPortfolioData = [
+  {
+    title: 'High School Football Hype Video',
+    description: 'Cinematic hype video showcasing the intensity of high school football',
+    thumbnail: '/hsvfb1(1).jpg',
+    embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
   },
   {
-    id: 'videos',
-    title: 'Video Portfolio',
-    coverImage: '/hsvfb1(1).jpg',
-    videos: [
-      {
-        title: 'High School Football Hype Video',
-        description: 'Cinematic hype video showcasing the intensity of high school football',
-        thumbnail: '/hsvfb1(1).jpg',
-        embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
-      },
-      {
-        title: 'Basketball Highlight Reel',
-        description: 'Fast-paced highlight reel capturing the best moments from the season',
-        thumbnail: '/hsjbb1(1).jpg',
-        embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
-      },
-      {
-        title: 'MLS Soccer Action',
-        description: 'Professional soccer coverage from San Jose Earthquakes matches',
-        thumbnail: '/sjevrsl1(1).jpg',
-        embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
-      }
-    ]
+    title: 'Basketball Highlight Reel',
+    description: 'Fast-paced highlight reel capturing the best moments from the season',
+    thumbnail: '/hsjbb1(1).jpg',
+    embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
+  },
+  {
+    title: 'MLS Soccer Action',
+    description: 'Professional soccer coverage from San Jose Earthquakes matches',
+    thumbnail: '/sjevrsl1(1).jpg',
+    embedUrl: 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE' // Replace with actual video URLs
   }
 ];
 
@@ -288,7 +285,7 @@ const Portfolio = () => {
       });
 
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'portfolio', 'reviews', 'news', 'pricing', 'contact'];
+      const sections = ['home', 'about', 'portfolio', 'video-portfolio', 'reviews', 'news', 'pricing', 'contact'];
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section) {
@@ -515,6 +512,16 @@ const Portfolio = () => {
 
   // Render the News section
   const renderNews = () => {
+    const [newsPhotoSlide, setNewsPhotoSlide] = useState(0);
+    const newsPhotos = ['/hsvfb1(1).jpg', '/sjevrsl3(1).jpg', '/gvb3(1).jpg', '/hsjbb2(1).jpg', '/gfhsn3(1).jpg'];
+    
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setNewsPhotoSlide((prev) => (prev + 1) % newsPhotos.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }, [newsPhotos.length]);
+    
     return (
       <section
         id="news"
@@ -526,6 +533,46 @@ const Portfolio = () => {
             Sports News & Updates
             <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
           </h2>
+          
+          {/* News Photos Slideshow */}
+          <div className="mb-16">
+            <h3 className="text-2xl text-center mb-8">Recent Event Photos</h3>
+            <div className="relative h-[35vh] md:h-[45vh] rounded-lg overflow-hidden bg-black max-w-4xl mx-auto">
+              {newsPhotos.map((photo, index) => (
+                <div 
+                  key={index} 
+                  className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                    index === newsPhotoSlide 
+                      ? 'opacity-100 z-10' 
+                      : 'opacity-0 z-0'
+                  }`}
+                >
+                  <Suspense fallback={<div className="w-full h-full bg-gray-900 flex items-center justify-center">Loading...</div>}>
+                    <LazyImage 
+                      src={photo} 
+                      alt={`Event photo ${index + 1}`} 
+                      className="w-full h-full object-contain"
+                    />
+                  </Suspense>
+                </div>
+              ))}
+              
+              {/* Slide indicators */}
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
+                {newsPhotos.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setNewsPhotoSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === newsPhotoSlide ? 'bg-white w-4' : 'bg-white/50'
+                    }`}
+                    aria-label={`Go to photo ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newsData.map((news) => (
               <div
@@ -533,12 +580,12 @@ const Portfolio = () => {
                 className="bg-gray-900 bg-opacity-40 rounded-lg overflow-hidden hover:transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
                 onClick={() => openNews(news)}
               >
-                <div className="aspect-w-16 aspect-h-9">
+                <div className="h-48 overflow-hidden">
                   <Suspense fallback={<div className="w-full h-48 bg-gray-800 flex items-center justify-center">Loading...</div>}>
                     <LazyImage
                       src={news.image}
                       alt={news.title}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-full object-cover"
                     />
                   </Suspense>
                 </div>
@@ -776,6 +823,15 @@ const Portfolio = () => {
           >
             News
             <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'news' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+          </a>
+
+          <a 
+            href="#video-portfolio" 
+            onClick={(e) => { e.preventDefault(); scrollToSection('video-portfolio'); }} 
+            className={`hover:text-gray-300 transition-colors py-3 md:py-0 relative group ${activeSection === 'video-portfolio' ? 'text-white' : 'text-gray-400'}`}
+          >
+            Videos
+            <span className={`absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${activeSection === 'video-portfolio' ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
           </a>
 
           <a 
@@ -1035,6 +1091,83 @@ const Portfolio = () => {
 
         {/* Google Business Integration */}
         {renderGoogleBusiness()}
+
+        {/* Video Portfolio section */}
+        <section
+          id="video-portfolio"
+          className="py-20 px-4 opacity-0 transition-opacity duration-1000 bg-gray-900 bg-opacity-20"
+          ref={el => sectionRefs.current[8] = el}
+        >
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl text-center mb-12 relative">
+              Video Portfolio
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-white mt-4"></span>
+            </h2>
+            <div className="max-w-5xl mx-auto">
+              <div className="relative h-[60vh] md:h-[70vh] rounded-lg overflow-hidden bg-black">
+                {videoPortfolioData.map((video, index) => (
+                  <div 
+                    key={index} 
+                    className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                      index === videoCurrentSlide 
+                        ? 'opacity-100 z-10' 
+                        : 'opacity-0 z-0'
+                    }`}
+                  >
+                    <div className="w-full h-full flex flex-col items-center justify-center p-8">
+                      <iframe
+                        src={video.embedUrl}
+                        title={video.title}
+                        className="w-full h-4/5 max-w-4xl rounded-lg shadow-2xl"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                      <div className="mt-6 text-center">
+                        <h3 className="text-2xl font-bold mb-2">{video.title}</h3>
+                        <p className="text-gray-300 text-lg max-w-2xl mx-auto">{video.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Navigation Buttons */}
+                <button 
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-3 z-20 transition-all duration-300 hover:scale-110"
+                  onClick={() => {
+                    setVideoCurrentSlide((prev) => (prev - 1 + videoPortfolioData.length) % videoPortfolioData.length);
+                  }}
+                  aria-label="Previous video"
+                >
+                  <ChevronLeft size={32} />
+                </button>
+                
+                <button 
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-3 z-20 transition-all duration-300 hover:scale-110"
+                  onClick={() => {
+                    setVideoCurrentSlide((prev) => (prev + 1) % videoPortfolioData.length);
+                  }}
+                  aria-label="Next video"
+                >
+                  <ChevronRight size={32} />
+                </button>
+              </div>
+              
+              {/* Video indicators */}
+              <div className="flex justify-center gap-3 mt-6">
+                {videoPortfolioData.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setVideoCurrentSlide(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === videoCurrentSlide ? 'bg-white w-6' : 'bg-white/50'
+                    }`}
+                    aria-label={`Go to video ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* News section */}
         {renderNews()}
@@ -1320,10 +1453,10 @@ const Portfolio = () => {
             
             <div className="text-center">
               <button 
-                onClick={openScheduling}
+                onClick={closeNews}
                 className="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:-translate-y-1"
               >
-                Book Now
+                Close
               </button>
             </div>
           </div>
